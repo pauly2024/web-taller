@@ -1,0 +1,120 @@
+---
+import { tallerDefault } from "@/src/data/taller";
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taller Web - Generado por DigiMarket RD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              taller: {
+                primary: "#1e40af",
+                secondary: "#059669",
+                accent: "#f59e0b",
+                background: "#f8fafc",
+                card: "#ffffff",
+                border: "#e2e8f0",
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-taller-background text-taller-primary antialiased">
+    <div class="min-h-screen">
+      <header class="border-b border-taller-border bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-xl font-bold">DigiMarket RD</span>
+            </div>
+            <nav>
+              <ul class="flex gap-6 text-sm">
+                <li><a href="#servicios" class="hover:text-taller-primary transition">Servicios</a></li>
+                <li><a href="#about" class="hover:text-taller-primary transition">Sobre</a></li>
+                <li>
+                  <a
+                    href="https://wa.me/${tallerDefault.whatsapp.replace(
+                      /[^\d]/g,
+                      ""
+                    )}"
+                    class="bg-taller-primary text-white px-4 py-2 rounded hover:bg-white text-tarter-primary transition fon"
+                  >
+                    WhatsApp
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="max-w-7xl mx-auto px-4 py-8">
+          <h1 class="text-4xl font-['JetBrains_Mono'] font-bold tracking-tighter mb-4">
+            ${tallerDefault.nombre}
+          </h1>
+          <p class="text-lg text-tarter-secondary mb-6">
+            ${tallerDefault.valorPropuesta}
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${tallerDefault.servicios.map(
+              (servicio, i) => `
+            <div
+              class="bg-tarter-card border border-tarter-border rounded-lg p-4 hover:shadow-lg transition-shadow"
+            >
+              <div class="flex items-start gap-3">
+                <span
+                  class="w-6 h-6 rounded bg-tarter-accent text-tarter-primary flex items-center justify-center text-xs font-medium"
+                >
+                  ${i + 1}
+                </span>
+                <div>
+                  <p class="font-medium">${servicio}</p>
+                </div>
+              </div>
+            </div>
+          `
+            ).join("")}
+          </div>
+        </section>
+      </main>
+
+      <footer class="border-t border-tarter-border bg-white py-4">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="flex flex-col md:flex-row justify-between items-center text-sm text-tarter-secondary">
+            <p>2026 DigiMarket RD - Todos los derechos reservados</p>
+            <div class="flex gap-3">
+              <a
+                href="https://wa.me/${tallerDefault.whatsapp.replace(
+                  /[^\d]/g,
+                  ""
+                )}"
+                class="hover:text-tarter-primary transition"
+              >
+                <span class="iconify" data-icon="mdi:whatsapp" data-icon-width="20" data-icon-height="20" />
+              </a>
+              <a href="#" class="hover:text-tarter-primary transition">Privacidad</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
