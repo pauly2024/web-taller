@@ -1,12 +1,17 @@
 import type { APIRoute } from "astro";
 import { tallerDefault } from "../../../data/taller";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const { leadData, packageType, packagePrice } = body;
 
-    // Determinar el tipo de sitio según el paquete
     let sitioConfig: any = {};
 
     switch (packageType) {
@@ -74,19 +79,23 @@ export const POST: APIRoute = async ({ request }) => {
         config: sitioConfig,
         message: `Sitio ${packageType} generado para ${leadData?.nombre || "taller"}`,
       }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   } catch (error) {
     return new Response(
       JSON.stringify({ success: false, error: "Error generating site config" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
+};
+
+export const OPTIONS: APIRoute = async () => {
+  return new Response(null, { status: 204, headers: corsHeaders });
 };
 
 export const GET: APIRoute = async () => {
   return new Response(
     JSON.stringify({ message: "Use POST to generate site config" }),
-    { status: 405, headers: { "Content-Type": "application/json" } }
+    { status: 405, headers: { "Content-Type": "application/json", ...corsHeaders } }
   );
 };
