@@ -1,6 +1,0 @@
-{
-  "functions": {
-    "api/web/generate.ts": { "maxDuration": 30 },
-    "api/web/deploy.ts": { "maxDuration": 30 }
-  }
-}
