@@ -4,7 +4,7 @@ import { tallerDefault } from "@/src/data/taller";
 
 const app = new Hono();
 
-app.post("/generate", (c) => {
+app.post("/generate", async (c) => {
   const body = await c.req.json();
 
   const { leadData, packageType, packagePrice } = body;
@@ -79,7 +79,7 @@ app.post("/generate", (c) => {
   });
 });
 
-app.post("/deploy", (c) => {
+app.post("/deploy", async (c) => {
   // Endpoint simulado para deploy en Cloudflare Pages
   const body = await c.req.json();
   const { config } = body;
