@@ -1,6 +1,6 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { tallerDefault } from "@/src/data/taller";
+import { tallerDefault } from "../../../data/taller";
 
 const app = new Hono();
 
