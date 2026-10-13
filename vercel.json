@@ -1,0 +1,20 @@
+{
+  "functions": {
+    "src/pages/api/web/generate.ts": {
+      "runtime": "nodejs18.x"
+    },
+    "src/pages/api/web/deploy.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/web/generate",
+      "destination": "/api/web/generate"
+    },
+    {
+      "source": "/api/web/deploy",
+      "destination": "/api/web/deploy"
+    }
+  ]
+}
