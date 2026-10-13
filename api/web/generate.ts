@@ -1,4 +1,4 @@
-import { tallerDefault } from "../../../src/data/taller";
+import { tallerDefault } from "../data/taller";
 
 export default async function handler(req, res) {
   // CORS headers
