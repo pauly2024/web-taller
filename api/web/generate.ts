@@ -1,0 +1,89 @@
+import { tallerDefault } from "../../../src/data/taller";
+
+export default async function handler(req, res) {
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { leadData, packageType, packagePrice } = req.body;
+
+    let sitioConfig = {};
+
+    switch (packageType) {
+      case 'basico':
+        sitioConfig = {
+          nombreSitio: `${leadData?.nombre || 'Taller'} Web Basico`,
+          descripcion: 'Sitio web corporativo para taller automotriz',
+          serviciosDestacados: leadData?.servicios || tallerDefault.servicios,
+          paquete: 'Basico',
+          precio: packagePrice || 'Desde $299',
+          whatsapp: leadData?.whatsapp || tallerDefault.whatsapp,
+          cta: 'Agendar cita por WhatsApp',
+        };
+        break;
+      case 'pro':
+        sitioConfig = {
+          nombreSitio: `${leadData?.nombre || 'Taller'} Web Pro`,
+          descripcion: 'Sitio web con agendamiento y sistema de citas',
+          serviciosDestacados: leadData?.servicios || tallerDefault.servicios,
+          paquete: 'Pro',
+          precio: packagePrice || 'Desde $499',
+          whatsapp: leadData?.whatsapp || tallerDefault.whatsapp,
+          cta: 'Agendar cita por WhatsApp',
+          features: [
+            'Sistema de citas en línea',
+            'Gallery de trabajos',
+            'WhatsApp Business integrado',
+          ],
+        };
+        break;
+      case 'premium':
+        sitioConfig = {
+          nombreSitio: `${leadData?.nombre || 'Taller'} Web Premium`,
+          descripcion: 'Sitio web completo con IA y automatización',
+          serviciosDestacados: leadData?.servicios || tallerDefault.servicios,
+          paquete: 'Premium',
+          precio: packagePrice || 'Desde $799',
+          whatsapp: leadData?.whatsapp || tallerDefault.whatsapp,
+          cta: 'Chatear por WhatsApp',
+          features: [
+            'Agente IA WhatsApp 24/7',
+            'Sistema de citas inteligente',
+            'Gallery profesional',
+            'SEO optimizado local',
+            'Integración CRM',
+          ],
+        };
+        break;
+      default:
+        sitioConfig = {
+          nombreSitio: `${leadData?.nombre || 'Taller'} Web`,
+          descripcion: 'Sitio web para taller',
+          serviciosDestacados: leadData?.servicios || tallerDefault.servicios,
+          paquete: 'Basico',
+          precio: packagePrice || 'Desde $299',
+          whatsapp: leadData?.whatsapp || tallerDefault.whatsapp,
+          cta: 'Contactar',
+        };
+    }
+
+    return res.status(200).json({
+      success: true,
+      siteUrl: `/sitio/${Date.now()}`,
+      config: sitioConfig,
+      message: `Sitio ${packageType} generado para ${leadData?.nombre || 'taller'}`,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: 'Error generating site config' });
+  }
+}
