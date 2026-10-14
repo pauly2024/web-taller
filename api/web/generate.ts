@@ -1,5 +1,3 @@
-import { tallerDefault } from "../data/taller";
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -10,7 +8,24 @@ function setCors(res: any) {
   Object.entries(corsHeaders).forEach(([key, value]) => res.setHeader(key, value));
 }
 
-export default async function handler(req, res) {
+const tallerDefault = {
+  nombre: "Taller Ejemplo",
+  rubro: "Automotriz",
+  servicios: [
+    "Mantenimiento y reparación",
+    "Diagnóstico computarizado",
+    "Cambio de aceite",
+    "Neumáticos",
+  ],
+  whatsapp: "+1 809-555-1234",
+  direccion: "Av. Principal #123, Ciudad",
+  horario: "Lun-Vie 8:00-18:00, Sáb 9:00-13:00",
+  calificacion: 4.5,
+  reviews: 128,
+  valorPropuesta: "Atención rápida y precios justos para tu vehículo",
+};
+
+export default async function handler(req: any, res: any) {
   setCors(res);
 
   if (req.method === 'OPTIONS') {
