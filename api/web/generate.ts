@@ -39,6 +39,8 @@ export default async function handler(req: any, res: any) {
   try {
     const { leadData, packageType, packagePrice } = req.body;
 
+    console.log('generate: received', { leadData, packageType, packagePrice });
+
     let sitioConfig = {};
 
     switch (packageType) {
@@ -105,7 +107,8 @@ export default async function handler(req: any, res: any) {
       config: sitioConfig,
       message: `Sitio ${packageType} generado para ${leadData?.nombre || 'taller'}`,
     });
-  } catch (error) {
-    return res.status(500).json({ success: false, error: 'Error generating site config' });
+  } catch (error: any) {
+    console.error('generate error:', error);
+    return res.status(500).json({ success: false, error: error.message || 'Error generating site config' });
   }
 }
