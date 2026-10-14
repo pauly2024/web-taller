@@ -1,4 +1,4 @@
-import { tallerDefault } from "../data/taller.ts";
+import { tallerDefault } from "../data/taller";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
