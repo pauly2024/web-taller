@@ -126,3 +126,4 @@ export default async function handler(req: any, res: any) {
     config: sitioConfig,
     message: `Sitio ${packageType} generado para ${leadData?.nombre || 'taller'}`,
   });
+}
