@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-import { tallerDefault } from '../../data/taller';
+import { tallerDefault } from '../../../data/taller';
 
 interface LeadData {
   nombre?: string;
