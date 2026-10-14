@@ -1,10 +1,17 @@
-import { tallerDefault } from "../data/taller.js";
+import { tallerDefault } from "../data/taller.ts";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+function setCors(res: any) {
+  Object.entries(corsHeaders).forEach(([key, value]) => res.setHeader(key, value));
+}
 
 export default async function handler(req, res) {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  setCors(res);
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
