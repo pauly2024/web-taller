@@ -58,6 +58,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   const { leadData, packageType, packagePrice } = body;
 
+  try {
     let sitioConfig: any = {};
 
     switch (packageType) {
