@@ -36,29 +36,14 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Parse JSON body - handle both parsed and raw body
-  let body: any = {};
-  try {
-    if (typeof req.body === 'string') {
-      body = req.body ? JSON.parse(req.body) : {};
-    } else if (req.body && typeof req.body === 'object') {
-      body = req.body;
-    } else {
-      // Fallback: read raw body stream
-      const chunks: Buffer[] = [];
-      for await (const chunk of req) {
-        chunks.push(chunk);
-      }
-      const rawBody = Buffer.concat(chunks).toString('utf8');
-      body = rawBody ? JSON.parse(rawBody) : {};
-    }
-  } catch (e) {
-    return res.status(400).json({ success: false, error: 'Invalid JSON' });
-  }
+  // Use req.body directly - Vercel parses JSON automatically
+  const body = req.body || {};
+
+  console.log('generate: received body', body);
 
   const { leadData, packageType, packagePrice } = body;
 
-  console.log('generate: received', { leadData, packageType, packagePrice });
+  console.log('generate: parsed', { leadData, packageType, packagePrice });
 
   let sitioConfig = {};
 
