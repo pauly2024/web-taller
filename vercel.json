@@ -29,11 +29,5 @@
         }
       ]
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/web/(.*)",
-      "destination": "/api/web/$1"
-    }
   ]
 }
