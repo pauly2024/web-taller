@@ -394,9 +394,13 @@ export default async function handler(req: any, res: any) {
   }
 
   let body = '';
-  for await (const chunk of req) {
-    body += chunk;
-  }
+  await new Promise<void>((resolve, reject) => {
+    req.on('data', (chunk: Buffer) => {
+      body += chunk.toString();
+    });
+    req.on('end', () => resolve());
+    req.on('error', reject);
+  });
 
   let parsedBody: any = {};
   try {
