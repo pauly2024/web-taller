@@ -17,7 +17,7 @@ const tallerDefault = {
   valorPropuesta: "Atención rápida y precios justos para tu vehículo",
 };
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   // CORS headers
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -41,7 +41,8 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    const body = await request.json();
+    // Use parsed body from middleware, fallback to request.json()
+    const body = locals.body || await request.json();
 
     console.log('generate: received', body);
 
