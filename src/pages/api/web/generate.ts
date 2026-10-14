@@ -17,7 +17,7 @@ const tallerDefault = {
   valorPropuesta: "Atención rápida y precios justos para tu vehículo",
 };
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request }) => {
   // CORS headers
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -40,13 +40,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
   }
 
+  // Parse JSON body with proper error handling
+  let body: any = {};
   try {
-    // Use parsed body from middleware, fallback to request.json()
-    const body = locals.body || await request.json();
+    const contentType = request.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      body = await request.json();
+    }
+  } catch (e) {
+    return new Response(JSON.stringify({ success: false, error: 'Invalid JSON' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
 
-    console.log('generate: received', body);
+  console.log('generate: received', body);
 
-    const { leadData, packageType, packagePrice } = body;
+  const { leadData, packageType, packagePrice } = body;
 
     let sitioConfig: any = {};
 
