@@ -114,7 +114,6 @@ async function deployToVercel(config: any, slug: string): Promise<{ url: string;
   }
 
   try {
-    // Crear archivos del proyecto para deploy
     const files = [
       {
         file: 'package.json',
@@ -186,7 +185,6 @@ async function deployToVercel(config: any, slug: string): Promise<{ url: string;
       return null;
     }
 
-    // Vercel devuelve URL inmediatamente para preview deployments
     const deploymentUrl = data.url
       ? `https://${data.url}`
       : `https://${data.name}.vercel.app`;
@@ -367,34 +365,62 @@ const config = ${JSON.stringify(config, null, 2)};
 </html>`;
 }
 
+function sendJson(res: any, statusCode: number, data: any) {
+  res.statusCode = statusCode;
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.end(JSON.stringify(data));
+}
+
 export default async function handler(req: any, res: any) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    return res.status(204).end();
+    res.statusCode = 204;
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.end();
+    return;
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    sendJson(res, 405, { error: 'Method not allowed' });
+    return;
+  }
+
+  let body = '';
+  for await (const chunk of req) {
+    body += chunk;
+  }
+
+  let parsedBody: any = {};
+  try {
+    parsedBody = body ? JSON.parse(body) : {};
+  } catch (e) {
+    sendJson(res, 400, { success: false, error: 'Invalid JSON' });
+    return;
+  }
+
+  const { leadData, packageType, packagePrice }: DeployRequest = parsedBody;
+
+  if (!leadData || !packageType) {
+    sendJson(res, 400, {
+      success: false,
+      error: 'Datos requeridos: leadData, packageType'
+    });
+    return;
   }
 
   try {
-    const { leadData, packageType, packagePrice }: DeployRequest = req.body;
-
-    if (!leadData || !packageType) {
-      return res.status(400).json({
-        success: false,
-        error: 'Datos requeridos: leadData, packageType'
-      });
-    }
-
     const nombre = leadData.nombre || tallerDefault.nombre;
     const slug = `taller-${slugify(nombre)}-${Date.now()}`;
     const config = generateSiteConfig(leadData, packageType, packagePrice);
 
-    // Intentar deploy real a Vercel
     const vercelResult = await deployToVercel(config, slug);
 
     let siteUrl: string;
@@ -404,21 +430,20 @@ export default async function handler(req: any, res: any) {
       siteUrl = vercelResult.url;
       deploymentId = vercelResult.deploymentId;
     } else {
-      // Fallback: URL de preview simulada (para desarrollo local)
       siteUrl = `https://taller-${slug}.vercel.app`;
       deploymentId = `local-${slug}`;
     }
 
-    return res.status(200).json({
+    sendJson(res, 200, {
       success: true,
       siteUrl,
       config,
       deploymentId,
-      message: \`Sitio \${packageType} generado y desplegado para \${nombre}\`,
+      message: `Sitio ${packageType} generado y desplegado para ${nombre}`,
     });
   } catch (error) {
     console.error('Error generando/deployando sitio:', error);
-    return res.status(500).json({
+    sendJson(res, 500, {
       success: false,
       error: 'Error generando o deployando sitio'
     });
